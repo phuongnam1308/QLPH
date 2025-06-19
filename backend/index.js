@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const dbConnect = require("./src/config/dbConnect");
+const connection = require("./src/config/database");
 
 dotenv.config();
 
@@ -12,12 +12,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-dbConnect();
-
 app.get("/", (req, res) => {
   res.send("Server for Meeting Room Management is running.");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running at PORT ${PORT}`);
-});
+(async () => {
+  try {
+    await connection();
+    app.listen(PORT, () => {
+      console.log(`Example app listening on port ${PORT}`);
+    });
+  } catch (error) {
+    console.log("error connect to server:>> ", error);
+  }
+})();
