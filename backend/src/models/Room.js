@@ -5,7 +5,19 @@ const roomSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    status: {
+    location: {
+      type: String,
+    },
+    capacity: {
+      type: Number,
+    },
+    description: {
+      type: String,
+    },
+    equipment: {
+      type: String,
+    },
+    is_active: {
       type: String,
       enum: ["available", "booked", "cancelled"],
     },

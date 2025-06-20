@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connection = require("./src/config/database");
+const routerRoom = require("./src/router/routeRoom");
 
 dotenv.config();
 
@@ -12,9 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.send("Server for Meeting Room Management is running.");
-});
+app.use("/api/", routerRoom);
 
 (async () => {
   try {

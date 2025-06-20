@@ -1,4 +1,5 @@
-const Room = require("../models/roomModel");
+const Room = require("../models/Room");
+
 module.exports = {
   createRoom: async (roomData) => {
     try {
@@ -6,6 +7,14 @@ module.exports = {
       return room;
     } catch (error) {
       throw new Error("Error creating room: " + error.message);
+    }
+  },
+  getRooms: async () => {
+    try {
+      const rooms = await Room.find();
+      return rooms;
+    } catch (error) {
+      throw new Error("Error fetching rooms: " + error.message);
     }
   },
 };
