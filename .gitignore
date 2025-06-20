@@ -6,7 +6,7 @@ frontend/build
 admin/build
 
 # Environment files
-**/.env
+
 
 # Logs
 *.log
