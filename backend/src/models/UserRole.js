@@ -17,7 +17,6 @@ const userRoleSchema = new mongoose.Schema({
   }
 });
 
-// Đảm bảo mỗi cặp user_id và role_id là duy nhất
 userRoleSchema.index({ user_id: 1, role_id: 1 }, { unique: true });
 
 module.exports = mongoose.model('UserRole', userRoleSchema);

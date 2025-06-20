@@ -12,9 +12,9 @@ const connection = async () => {
   
   try {
     await mongoose.connect(process.env.DB_HOST, options);
-    console.log('Đã kết nối MongoDB');
+    console.log('Connected to MongoDB');
   } catch (error) {
-    console.error('Lỗi kết nối MongoDB:', error.message);
+    console.error('MongoDB connection error:', error.message);
     process.exit(1);
   }
 };

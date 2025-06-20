@@ -7,6 +7,7 @@ const initAdmin = require('./src/utils/initAdmin');
 const authRouter = require('./src/router/routeAuth');
 const userRouter = require('./src/router/routeUser');
 const roleRouter = require('./src/router/routeRole');
+const roomRouter = require('./src/router/routeRoom');
 
 dotenv.config();
 
@@ -22,10 +23,15 @@ app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/roles', roleRouter);
+app.use('/api/rooms', roomRouter);
+
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: 'API not found' });
+});
 
 app.use((err, req, res, next) => {
-  console.error('Lỗi server:', err.message);
-  res.status(500).json({ success: false, message: 'Lỗi hệ thống' });
+  console.error('Server error:', err.stack);
+  res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
 const startServer = async () => {
@@ -34,10 +40,10 @@ const startServer = async () => {
     await initAdmin();
     
     app.listen(PORT, () => {
-      console.log(`Server chạy trên cổng ${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error('Khởi động server thất bại:', error);
+    console.error('Server startup failed:', error);
     process.exit(1);
   }
 };

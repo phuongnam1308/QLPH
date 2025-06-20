@@ -4,7 +4,6 @@ const UserRole = require('../models/UserRole');
 const bcrypt = require('bcryptjs');
 
 module.exports = async () => {
-  // Tạo vai trò admin nếu chưa có
   let adminRole = await Role.findOne({ role_name: 'admin' });
   if (!adminRole) {
     adminRole = new Role({ 
@@ -14,7 +13,6 @@ module.exports = async () => {
     await adminRole.save();
   }
 
-  // Tạo tài khoản admin nếu chưa có
   let adminUser = await User.findOne({ username: 'admin' });
   if (!adminUser) {
     const hashedPassword = await bcrypt.hash('admin123', 10);
@@ -28,7 +26,6 @@ module.exports = async () => {
     await adminUser.save();
   }
 
-  // Gán vai trò admin nếu chưa gán
   const assignmentExists = await UserRole.findOne({ 
     user_id: adminUser._id,
     role_id: adminRole._id

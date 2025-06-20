@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const { auth, adminOnly, userOrAdmin } = require('../Middleware/authMiddleware'); // Sửa đường dẫn
+const { auth, adminOnly, userOrAdmin } = require('../Middleware/authMiddleware');
 
 router.post('/', auth, adminOnly, userController.createUser);
 router.get('/', auth, adminOnly, userController.getAllUsers);

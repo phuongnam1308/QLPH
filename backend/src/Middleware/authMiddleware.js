@@ -1,19 +1,21 @@
-const { verifyAccessToken } = require('../utils/tokenUtils');
-const User = require('../models/User');
+const tokenUtils = require('../utils/tokenUtils');
 
 exports.auth = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ success: false, message: 'Cần đăng nhập' });
   
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
+  }
+
   try {
-    const decoded = verifyAccessToken(token);
+    const decoded = tokenUtils.verifyAccessToken(token);
     req.user = decoded;
     next();
   } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ success: false, message: 'Token đã hết hạn' });
-    }
-    res.status(401).json({ success: false, message: 'Token không hợp lệ' });
+    let message = 'Invalid token';
+    if (error.name === 'TokenExpiredError') message = 'Token expired';
+    if (error.message === 'Token revoked') message = 'Token revoked';
+    res.status(401).json({ success: false, message });
   }
 };
 
@@ -21,7 +23,7 @@ exports.adminOnly = (req, res, next) => {
   if (req.user.roles && req.user.roles.includes('admin')) {
     next();
   } else {
-    res.status(403).json({ success: false, message: 'Yêu cầu quyền quản trị' });
+    res.status(403).json({ success: false, message: 'Admin access required' });
   }
 };
 
@@ -32,6 +34,6 @@ exports.userOrAdmin = (req, res, next) => {
   if (isAdmin || isSelf) {
     next();
   } else {
-    res.status(403).json({ success: false, message: 'Không có quyền truy cập' });
+    res.status(403).json({ success: false, message: 'Access denied' });
   }
 };
