@@ -17,4 +17,14 @@ module.exports = {
       throw new Error("Error fetching rooms: " + error.message);
     }
   },
+  updateRoom: async (roomId, roomData) => {
+    try {
+      const updatedRoom = await Room.findByIdAndUpdate(roomId, roomData, {
+        new: true,
+      });
+      return updatedRoom;
+    } catch (error) {
+      throw new Error("Error updating room: " + error.message);
+    }
+  },
 };
