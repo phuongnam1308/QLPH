@@ -1,6 +1,5 @@
 const Joi = require("joi");
 const validate = require("../Middleware/validate");
-const e = require("express");
 
 const SchemaRoom = Joi.object({
   name: Joi.string().required().max(20).min(1).messages({
