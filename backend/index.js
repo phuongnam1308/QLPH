@@ -19,27 +19,12 @@ const userRouter = require('./src/router/routeUser');
 const roleRouter = require('./src/router/routeRole');
 const roomRouter = require('./src/router/routeRoom');
 
-
-
-
-
 app.use("/api/", routerRoom);
 app.use("/api/booking", routerBooking);
-(async () => {
-  app.use('/api/auth', authRouter);
-  app.use('/api/users', userRouter);
-  app.use('/api/roles', roleRouter);
-  app.use('/api/', roomRouter);
-
-  app.use((req, res) => {
-    res.status(404).json({ success: false, message: 'API not found' });
-  });
-
-  app.use((err, req, res, next) => {
-    console.error('Server error:', err.stack);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  });
-
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/roles', roleRouter);
+app.use('/api/', roomRouter);
   const startServer = async () => {
     try {
       await connection();
@@ -53,5 +38,4 @@ app.use("/api/booking", routerBooking);
       process.exit(1);
     }
   };
-});
-startServer();
+  startServer();
