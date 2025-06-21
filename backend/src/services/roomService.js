@@ -17,4 +17,26 @@ module.exports = {
       throw new Error("Error fetching rooms: " + error.message);
     }
   },
+  updateRoom: async (roomId, roomData) => {
+    try {
+      const updatedRoom = await Room.findByIdAndUpdate(roomId, roomData, {
+        new: true,
+      });
+      return updatedRoom;
+    } catch (error) {
+      throw new Error("Error updating room: " + error.message);
+    }
+  },
+  deleteRoom: async (roomId) => {
+    try {
+      const result = await Room.findByIdAndDelete(roomId);
+      if (!result) {
+        throw new Error("Room not found");
+      } else {
+        return { message: "Room deleted successfully", result: result };
+      }
+    } catch (error) {
+      throw new Error("Error deleting room: " + error.message);
+    }
+  },
 };
