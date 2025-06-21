@@ -27,4 +27,16 @@ module.exports = {
       throw new Error("Error updating room: " + error.message);
     }
   },
+  deleteRoom: async (roomId) => {
+    try {
+      const result = await Room.findByIdAndDelete(roomId);
+      if (!result) {
+        throw new Error("Room not found");
+      } else {
+        return { message: "Room deleted successfully", result: result };
+      }
+    } catch (error) {
+      throw new Error("Error deleting room: " + error.message);
+    }
+  },
 };
