@@ -1,54 +1,43 @@
 const Booking = require("../models/BookingModel");
 
-const generateBookingCode = async () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    const today = `${year}-${month}-${day}`;
-
-    const todayCount = await Booking.countDocuments({ date: today });
-    const sequence = String(todayCount + 1).padStart(3, "0");
-
-    return `BK${year}${month}${day}-${sequence}`;
-};
-
 const createBooking = async (req, res) => { 
-    const { roomId, userId, date, startTime, endTime } = req.body;
+    const { roomId, userId, date, startTime, endTime, title } = req.body;
     const nowDate = new Date();
     const bookingDate = new Date(date);
-
     if (bookingDate < nowDate.setHours(0, 0, 0, 0)) {
         return res.status(400).json({ error: "Không thể đặt lịch trong quá khứ" });
     }
-    if (!roomId || !userId || !date || !startTime || !endTime) {
+
+    if (!roomId || !userId || !date || !startTime || !endTime || !title) {
         return res.status(400).json({ error: "Thiếu thông tin đặt phòng" });
     }
+
     if (startTime >= endTime) {
         return res.status(400).json({ error: "Giờ kết thúc phải sau giờ bắt đầu" });
     }
 
     try {
-        const bookingCode = await generateBookingCode();
         const exists = await Booking.findOne({
-            roomId: roomId,
-            date: date,
+            roomId,
+            date,
             startTime: { $lt: endTime },
             endTime: { $gt: startTime },
             status: { $ne: "cancelled" }
         });
-        
+
         if (exists) {
-            return res.status(409).json({ error: "Phòng đã được đặt trong khung giờ này" , data: exists });
-        } 
-        const booking = new Booking({ roomId, userId, date, startTime, endTime, bookingCode });
+            return res.status(409).json({ error: "Phòng đã được đặt trong khung giờ này", data: exists });
+        }
+
+        const booking = new Booking({ roomId, userId, date, startTime, endTime, title });
         await booking.save();
         res.status(201).json(booking);  
-    } catch (error) { 
-        console.error("Lỗi khi tạo đặt phòng:", error);
+
+    } catch (error) {  
         res.status(500).json({ error: "Lỗi máy chủ khi tạo đặt phòng" });
     }
 };
+
 
 const cancelBooking = async (req, res) => {
     const { bookingId } = req.params;

@@ -9,19 +9,19 @@ import Login from "../pages/Login";
 import Room from "../pages/Room";
 
 const AppRouter = (): React.JSX.Element => (
-  <BrowserRouter>
+<BrowserRouter>
     <Routes>
-      <Route path="/admin" element={<AdminLayout />}>
+    <Route path="/admin" element={<AdminLayout />}>
         <Route path="booking" element={<Booking />} />
         <Route path="*" element={<NotFound />} />
         <Route path="rooms" element={<Room />} />
-      </Route>
-      <Route path="/" element={<MainLayout />}>
+    </Route>
+    <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
-      </Route>
-      <Route path="/login" element={<Login />} />
+    </Route>
+    <Route path="/login" element={<Login />} />
     </Routes>
-  </BrowserRouter>
+</BrowserRouter>
 );
 
 export default AppRouter;
