@@ -5,9 +5,9 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import Booking from "../pages/Booking";
 import NotFound from "../pages/NotFound";
-import Login from "../pages/Login";
 
 import RoomPage from "../pages/Room";
+import Login from "../pages/Login/Login";
 
 const AppRouter = (): React.JSX.Element => (
   <BrowserRouter>

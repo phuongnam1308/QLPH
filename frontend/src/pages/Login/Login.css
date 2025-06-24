@@ -1,0 +1,34 @@
+/* Login.css */
+
+/* Toàn bộ form */
+.login-form {
+  background-color: #f9f9f9;
+  padding: 60px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  margin: 230px auto;
+}
+
+/* Input fields */
+.login-form .ant-input {
+  border-radius: 8px;
+  height: 40px;
+}
+
+/* Password field */
+.login-form .ant-input-password {
+  border-radius: 8px;
+}
+
+/* Button */
+.login-form .ant-btn-primary {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* Checkbox */
+.login-form .ant-checkbox-wrapper {
+  margin-left: 8px;
+}
