@@ -13,3 +13,7 @@
     font-weight: 600;
     padding: 0.5rem;
 }
+.home-content{
+    display: grid;
+    grid-template-columns: 1fr 3fr; 
+}
