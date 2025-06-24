@@ -2,12 +2,12 @@ const Joi = require("joi");
 const validate = require("../Middleware/validate");
 
 const SchemaRoom = Joi.object({
-  name: Joi.string().required().max(20).min(1).messages({
+  name: Joi.string().max(20).min(1).required().messages({
     "string.base": `name phải là một chuỗi`,
     "string.empty": `name không được để trống`,
+    "any.required": `name không được để trống`,
     "string.min": `name phải có độ dài tối thiểu là {#limit}`,
     "string.max": `name phải có độ dài tối đa là {#limit}`,
-    "any.required": `name là trường bắt buộc`,
   }),
   location: Joi.string().max(50).messages({
     "string.base": `location phải là một chuỗi`,
@@ -31,5 +31,20 @@ const SchemaRoom = Joi.object({
     "string.base": `is_active phải là một chuỗi`,
     "any.only": `is_active phải là một trong các giá trị: 'available', 'booked', 'cancelled'`,
   }),
+}).min(1);
+
+const SchemaRoomId = Joi.object({
+  id: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required()
+    .messages({
+      "string.base": `id phải là một chuỗi`,
+      "string.pattern.base": `id phải là một ObjectId hợp lệ (24 ký tự hexa)`,
+      "any.required": `id là trường bắt buộc`,
+    }),
 });
-module.exports = { validateRoom: validate(SchemaRoom) };
+
+module.exports = {
+  validateRoom: validate(SchemaRoom, "body"),
+  validateRoomId: validate(SchemaRoomId, "params"),
+};
