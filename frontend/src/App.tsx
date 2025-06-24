@@ -1,6 +1,6 @@
 import AppRouter from './routes/AppRouter';
 
-const App = (): JSX.Element => {
+const App: React.FC = () => {
   return <AppRouter />;
 };
 
