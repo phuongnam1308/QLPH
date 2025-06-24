@@ -17,7 +17,9 @@ module.exports = {
   },
   getRoomAPI: async (req, res) => {
     try {
-      const rooms = await getRooms();
+      let { page, limit } = req.query;
+
+      const rooms = await getRooms(page, limit);
       res.status(200).json({ success: true, data: rooms });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
