@@ -6,7 +6,8 @@ import Home from "../pages/Home";
 import Booking from "../pages/Booking";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
-import Room from "../pages/Room";
+
+import RoomPage from "../pages/Room";
 
 const AppRouter = (): React.JSX.Element => (
   <BrowserRouter>
@@ -14,7 +15,7 @@ const AppRouter = (): React.JSX.Element => (
       <Route path="/admin" element={<AdminLayout />}>
         <Route path="booking" element={<Booking />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="rooms" element={<Room />} />
+        <Route path="rooms" element={<RoomPage />} />
       </Route>
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
