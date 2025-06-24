@@ -1,6 +1,11 @@
 import React from "react";
+import Calendar from "../components/Calendar";
 const Home = (): React.JSX.Element => {
-	return <h1>Welcome to Home Page</h1>;
+	return (
+		<>
+			<Calendar />
+		</>
+	);
 };
 
 export default Home;
