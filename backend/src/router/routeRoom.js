@@ -5,7 +5,7 @@ const {
   putRoomAPI,
   deleteRoomAPI,
 } = require("../controllers/roomController");
-const { validateRoom, validateRoomId } = require("../validate/validateRom");
+const { validateRoomId, validateRoom } = require("../validate/validateRom");
 
 const routerRoom = express.Router();
 routerRoom.post("/room", validateRoom, postRoomAPI);
