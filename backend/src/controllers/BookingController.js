@@ -1,7 +1,9 @@
 const Booking = require("../models/BookingModel");
 
 const createBooking = async (req, res) => { 
-    const { roomId, userId, date, startTime, endTime, title } = req.body;
+    const { roomId, date, startTime, endTime, title } = req.body;
+    const userId = req.user.id; 
+    
     const nowDate = new Date();
     const bookingDate = new Date(date);
     if (bookingDate < nowDate.setHours(0, 0, 0, 0)) {
@@ -126,7 +128,6 @@ const getUserBookingHistory = async (req, res) => {
         res.status(500).json({ error: "Không thể lấy lịch sử" });
     }
 };
-
 const getBookings = async (req, res) => {
     const {
         roomId,
@@ -146,25 +147,30 @@ const getBookings = async (req, res) => {
     if (date) query.date = date;
     if (status) query.status = status;
 
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const parsedLimit = parseInt(limit);
+    const skip = (parseInt(page) - 1) * parsedLimit;
     const sort = {};
     sort[sortField] = sortOrder === "asc" ? 1 : -1;
 
     try {
         const total = await Booking.countDocuments(query);
 
-        const bookings = await Booking.find(query)
+        let bookingsQuery = Booking.find(query)
             .populate("roomId", "-__v")
             .populate("userId", "-password -__v")
-            .sort(sort)
-            .skip(skip)
-            .limit(parseInt(limit));
+            .sort(sort);
+
+        if (parsedLimit !== -1) {
+            bookingsQuery = bookingsQuery.skip(skip).limit(parsedLimit);
+        }
+
+        const bookings = await bookingsQuery;
 
         res.status(200).json({
             total,
-            page: parseInt(page),
-            limit: parseInt(limit),
-            totalPages: Math.ceil(total / limit),
+            page: parsedLimit === -1 ? 1 : parseInt(page),
+            limit: parsedLimit,
+            totalPages: parsedLimit === -1 ? 1 : Math.ceil(total / parsedLimit),
             data: bookings,
         });
     } catch (err) {

@@ -66,3 +66,53 @@
   background-color: #f0f0f0;
   cursor: pointer;
 }
+.text-event{
+    padding: 5px 10px 5px 0;
+}
+.infor {
+    padding-top: 50px; 
+}
+
+.infor h4 {
+    margin-bottom: 8px;
+}
+
+.infor ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.infor li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.infor .color-box {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 8px;
+    display: inline-block;
+}
+
+.infor .approved {
+    background-color: #52c41a;
+}
+
+.infor .pending {
+    background-color: #faad14;
+}
+
+.infor .cancelled {
+    background-color: #ff4d4f;
+} 
+.infor .editable-dot {
+    width: 10px;
+    height: 10px;
+    background-color: blue;
+    border-radius: 50%;
+    margin-right: 8px;
+}

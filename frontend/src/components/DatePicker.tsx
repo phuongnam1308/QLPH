@@ -50,13 +50,24 @@ const DatePicker: React.FC<DatePickerProps> = ({ onDateChange }) => {
     };
 
     return ( 
-        <Calendar
-        fullscreen={false}
-        value={value}
-        onSelect={onSelect}
-        onPanelChange={onPanelChange}
-        headerRender={headerRender}
-        /> 
+        <> 
+            <Calendar
+                fullscreen={false}
+                value={value}
+                onSelect={onSelect}
+                onPanelChange={onPanelChange}
+                headerRender={headerRender}
+            />
+            <div className="infor"> 
+                <ul> 
+                    <li><span className="editable-dot"></span>Lịch bạn có thể chỉnh sửa</li>
+                    <li><span className="color-box approved"></span>Lịch đã được duyệt</li>
+                    <li><span className="color-box pending"></span>Lịch đang chờ duyệt</li>
+                    <li><span className="color-box cancelled"></span>Lịch đã bị hủy</li>
+                    <li><i>(Với những lịch hủy có thể đặt lịch mới đè lên lịch cũ)</i></li>
+                </ul>
+            </div>
+        </>
     );
 };
 

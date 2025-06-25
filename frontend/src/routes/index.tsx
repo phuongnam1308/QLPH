@@ -9,10 +9,9 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-
-      {/*Bọc Home bằng PrivateRoute */}
+ 
       <Route
-        path="/home"
+        path="/"
         element={
           <PrivateRoute>
             <Home />

@@ -28,24 +28,26 @@ const BookingModal: React.FC<{
 const [title, setTitle] = useState('');
 const [startTime, setStartTime] = useState<Date | null>(start);
 const [endTime, setEndTime] = useState<Date | null>(end);
-const [selectedRoom, setSelectedRoom] = useState<string>(rooms[0]?._id || '');
-
+    const [selectedRoom, setSelectedRoom] = useState<string>(rooms[0]?._id || '');
+    
 useEffect(() => {
     if (isOpen) {
-    const room = rooms.find((r) => r._id === selectedRoom);
-    const roomName = room?.name || '';
-    const now = new Date();
-    const formatted = now.toLocaleString('vi-VN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-    });
-    setTitle(`${roomName} - Lịch họp - ${formatted}`);
-    setStartTime(start);
-    setEndTime(end);
+      const room = rooms.find((r) => r._id === selectedRoom);
+      const roomName = room?.name || '';
+  
+      setStartTime(start);
+      setEndTime(end);
+  
+      if (start && end) {
+        const startStr = dayjs(start).format("HH:mm");
+        const endStr = dayjs(end).format("HH:mm");
+        const nowStr = dayjs().format("HH:mm");
+   
+        setTitle(`${startStr} - ${endStr} - Lịch họp - ${roomName} - ${nowStr}`);
+      }
     }
-}, [isOpen, start, end, rooms, selectedRoom]);
-
+  }, [isOpen, start, end, rooms, selectedRoom]);
+  
 const handleSubmit = () => {
     if (title && startTime && endTime && selectedRoom) {
     if (startTime >= endTime)  return;
