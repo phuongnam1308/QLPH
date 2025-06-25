@@ -1,10 +1,11 @@
-import { message, Popconfirm, Space, Table, TableProps } from "antd";
+import { Button, message, Popconfirm, Space, Table, TableProps } from "antd";
 import React, { useEffect, useState } from "react";
 import { deleteRoomAPI, getRoomsAPI } from "../services/roomService";
 import { AxiosError } from "axios";
 import { DeleteOutlined } from "@ant-design/icons";
-import ModalEditRoom from "../components/modalEditRoom";
 import { DataType, Room, RoomResponse } from "../types/room";
+import ModalRoom from "../components/modelRoom";
+import { toast } from "react-toastify";
 
 interface ApiError {
   message?: string;
@@ -13,6 +14,7 @@ interface DeleteResponse {
   success: boolean;
   data: { message: string; result?: any };
 }
+
 const RoomPage: React.FC = () => {
   const [rooms, setRooms] = useState<DataType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,6 +24,10 @@ const RoomPage: React.FC = () => {
   const [total, setTotal] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [dataDetail, setDataDetail] = useState<Room | null>(null);
+  const [modalMode, setModalMode] = useState<"createRoom" | "editRoom">(
+    "createRoom"
+  );
+
   useEffect(() => {
     getRooms();
   }, [currentPage, pageSize]);
@@ -43,7 +49,7 @@ const RoomPage: React.FC = () => {
           is_active: room.is_active || "available",
         }));
         setRooms(formattedRooms);
-        setTotal(res.data.pagination.total); // Cập nhật tổng số phòng
+        setTotal(res.data.pagination.total);
       } else {
         setError("Không tìm thấy phòng");
       }
@@ -60,12 +66,14 @@ const RoomPage: React.FC = () => {
       setLoading(false);
     }
   };
+
   const deleteRoom = async (roomId: string) => {
     try {
       const res: DeleteResponse = await deleteRoomAPI(roomId);
       if (res.success) {
         message.success(res.data.message || "Xóa phòng thành công");
-        getRooms(); // Làm mới danh sách sau khi xóa
+        getRooms();
+        toast.success("Xóa thành công");
       } else {
         setError("Xóa phòng thất bại");
       }
@@ -78,6 +86,7 @@ const RoomPage: React.FC = () => {
       }
     }
   };
+
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "STT",
@@ -108,14 +117,14 @@ const RoomPage: React.FC = () => {
         <Space size="middle">
           <a
             onClick={() => {
-              setIsModalOpen(true);
+              setModalMode("editRoom");
               setDataDetail(record);
+              setIsModalOpen(true);
             }}
           >
             Sửa
           </a>
           <Popconfirm
-            className="text-lg"
             title="Confirm delete"
             description="Chắc chắn xóa?"
             onConfirm={() => deleteRoom(record._id)}
@@ -129,9 +138,21 @@ const RoomPage: React.FC = () => {
       ),
     },
   ];
+
   return (
     <>
-      <h1>Room Page</h1>
+      <div className="flex justify-between">
+        <h1>Room Page</h1>
+        <Button
+          onClick={() => {
+            setModalMode("createRoom");
+            setDataDetail(null);
+            setIsModalOpen(true);
+          }}
+        >
+          Thêm phòng
+        </Button>
+      </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <Table<DataType>
         columns={columns}
@@ -152,10 +173,13 @@ const RoomPage: React.FC = () => {
           },
         }}
       />
-      <ModalEditRoom
+      <ModalRoom
         setIsModalOpen={setIsModalOpen}
         isModalOpen={isModalOpen}
         dataDetail={dataDetail}
+        getRooms={getRooms}
+        title={modalMode === "createRoom" ? "Tạo phòng" : "Sửa phòng"}
+        nameModel={modalMode}
       />
     </>
   );

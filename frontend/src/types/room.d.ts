@@ -5,28 +5,55 @@ interface Room {
   capacity?: number;
   description?: string;
   equipment?: string;
-  is_active?: "available" | "booked" | "cancelled" | null;
-  createdAt?: Date;
-  updatedAt?: Date;
+  is_active?: string;
 }
-export interface Pagination {
-  current_page: number;
-  limit: number;
-  total_pages: number;
-  total: number;
+
+interface CreateRoomInput {
+  name: string;
+  location?: string;
+  capacity?: number;
+  description?: string;
+  equipment?: string;
+  is_active?: string;
 }
-interface RoomResponse {
-  success: boolean;
-  data: {
-    result: Room[];
-    pagination: Pagination;
-  };
-}
+
 interface DataType extends Room {
   key: string;
 }
-export interface UpdateResponse {
+
+interface RoomResponse {
   success: boolean;
-  data: { message: string; result?: Room };
+  data?: {
+    result: Room[];
+    pagination: {
+      total: number;
+    };
+  };
 }
-export type { Room, RoomResponse, DataType };
+
+interface CreateResponse {
+  success: boolean;
+  message?: string;
+  data?: Room;
+}
+
+interface UpdateResponse {
+  success: boolean;
+  message?: string;
+  data?: Room;
+}
+
+interface DeleteResponse {
+  success: boolean;
+  data: { message: string; result?: any };
+}
+
+export type {
+  Room,
+  CreateRoomInput,
+  DataType,
+  RoomResponse,
+  CreateResponse,
+  UpdateResponse,
+  DeleteResponse,
+};

@@ -3,13 +3,17 @@ const Room = require("../models/Room");
 module.exports = {
   createRoom: async (roomData) => {
     try {
-      const existingRoom = await Room.find({ name: roomData.name });
-      if (existingRoom.length > 0) {
+      const existingRoom = await Room.countDocuments({ name: roomData.name });
+      console.log("existingRoom :>> ", existingRoom);
+      if (existingRoom > 0) {
         throw new Error("Tên phòng đã tồn tại");
       }
       const room = await Room.create(roomData);
       return room;
     } catch (error) {
+      if (error.code === 11000) {
+        throw new Error("Tên phòng đã tồn tại");
+      }
       throw new Error("Lỗi tạo phòng: " + error.message);
     }
   },
@@ -19,8 +23,12 @@ module.exports = {
       let total = null;
       if (page && limit) {
         let offset = (page - 1) * limit;
-        result = await Room.find().skip(offset).limit(limit).exec();
-        total = await Room.countDocuments();
+        const [roomData, totalRoom] = await Promise.all([
+          Room.find().skip(offset).limit(limit).exec(),
+          Room.countDocuments(),
+        ]);
+        result = roomData;
+        total = totalRoom;
       } else {
         result = await Room.find({});
       }
