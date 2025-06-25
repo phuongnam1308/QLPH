@@ -17,33 +17,40 @@ const navigate = useNavigate();
 
 const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     try {
-        const response = await axios.post('http://localhost:5000/api/auth/login', {
-            username: values.username,
-            password: values.password,
-        });
-
-        const { accessToken, user, } = response.data;
-
-        // Lưu token vào localStorage
-        localStorage.setItem('token', accessToken); 
-
-        localStorage.setItem('user', JSON.stringify(user));
-        if (user.roles.includes('admin')) {
-            navigate('/admin'); 
-        } else {
-            navigate('/');  
+    const response = await axios.post(
+        'http://localhost:5000/api/auth/login',
+        {
+        username: values.username,
+        password: values.password,
+        },
+        {
+        withCredentials: true,
         }
-        toast.success("Đăng nhập thành công");
-    }
-    catch (error: any) {
-        const msg = error?.response?.data?.message || 'Tên đăng nhập hoặc mật khẩu không đúng'; 
-        toast.error("Đăng nhập thất bại: " + msg);
-        message.error(msg);
-    }
-};
+    );
 
-const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    const { accessToken, user } = response.data;
+
+    localStorage.setItem('token', accessToken);
+    localStorage.setItem('user', JSON.stringify(user));
+
+    toast.success('Đăng nhập thành công');
+
+    if (user.roles.includes('admin')) {
+        navigate('/admin');
+    } else {
+        navigate('/');
+    }
+    }  catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+        const msg =
+            error.response?.data?.message || 'Tên đăng nhập hoặc mật khẩu không đúng';
+        toast.error('Đăng nhập thất bại: ' + msg);
+        message.error(msg);
+        } else {
+        toast.error('Đăng nhập thất bại');
+        message.error('Đăng nhập thất bại');
+        }
+    }
 };
 
 return (
@@ -55,7 +62,6 @@ return (
     style={{ maxWidth: 600 }}
     initialValues={{ remember: true }}
     onFinish={onFinish}
-    onFinishFailed={onFinishFailed}
     autoComplete="off"
     >
     <Form.Item<FieldType>
@@ -74,13 +80,13 @@ return (
         <Input.Password />
     </Form.Item>
 
-    <Form.Item<FieldType> name="remember" valuePropName="checked" label={null}>
+    <Form.Item<FieldType> name="remember" valuePropName="checked">
         <Checkbox>Remember me</Checkbox>
     </Form.Item>
 
-    <Form.Item label={null}>
+    <Form.Item>
         <Button type="primary" htmlType="submit">
-        Submit
+        Đăng nhập
         </Button>
     </Form.Item>
     </Form>

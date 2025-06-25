@@ -6,6 +6,12 @@ exports.login = async (req, res) => {
       req.body.username,
       req.body.password
     );
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: false,              
+      sameSite: 'Lax',           
+      maxAge: 7 * 24 * 60 * 60 * 1000 
+    });
     res.json({ success: true, ...result });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
