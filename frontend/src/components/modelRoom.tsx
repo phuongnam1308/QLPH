@@ -33,7 +33,6 @@ const ModalRoom: React.FC<ModalRoomProps> = ({
 }) => {
   const [form] = Form.useForm();
 
-  // Điền dữ liệu ban đầu khi sửa phòng
   React.useEffect(() => {
     if (nameModel === "editRoom" && dataDetail) {
       form.setFieldsValue({
@@ -94,7 +93,7 @@ const ModalRoom: React.FC<ModalRoomProps> = ({
         }, 1000);
       } else {
         toast.error(
-          res.message ||
+          (Array.isArray(res.message) && res.message[0]) ||
             (nameModel === "createRoom"
               ? "Tạo phòng thất bại"
               : "Cập nhật phòng thất bại"),

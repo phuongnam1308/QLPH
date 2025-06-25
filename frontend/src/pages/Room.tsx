@@ -1,4 +1,12 @@
-import { Button, message, Popconfirm, Space, Table, TableProps } from "antd";
+import {
+  Button,
+  message,
+  Popconfirm,
+  Space,
+  Table,
+  TableProps,
+  Tag,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { deleteRoomAPI, getRoomsAPI } from "../services/roomService";
 import { AxiosError } from "axios";
@@ -6,6 +14,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { DataType, Room, RoomResponse } from "../types/room";
 import ModalRoom from "../components/modelRoom";
 import { toast } from "react-toastify";
+import DetailRoom from "../components/DetailRoom";
 
 interface ApiError {
   message?: string;
@@ -27,6 +36,7 @@ const RoomPage: React.FC = () => {
   const [modalMode, setModalMode] = useState<"createRoom" | "editRoom">(
     "createRoom"
   );
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     getRooms();
@@ -86,7 +96,19 @@ const RoomPage: React.FC = () => {
       }
     }
   };
-
+  const renderStatusTag = (status: string) => {
+    let color = status.length >= 3 ? "#52c41a" : "green";
+    if (status === "booked") {
+      color = "#1677ff";
+    } else if (status === "cancelled") {
+      color = "#f5222d";
+    }
+    return (
+      <Tag color={color} key={status}>
+        {status.toUpperCase()}
+      </Tag>
+    );
+  };
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "STT",
@@ -98,7 +120,20 @@ const RoomPage: React.FC = () => {
       title: "Tên phòng",
       dataIndex: "name",
       key: "name",
-      render: (text: string) => <a>{text}</a>,
+      render: (_: unknown, record: DataType) => {
+        return (
+          <>
+            <a
+              onClick={() => {
+                setOpen(true);
+                setDataDetail(record);
+              }}
+            >
+              {record.name}
+            </a>
+          </>
+        );
+      },
     },
     {
       title: "Thiết bị",
@@ -109,6 +144,8 @@ const RoomPage: React.FC = () => {
       title: "Trạng thái",
       dataIndex: "is_active",
       key: "is_active",
+      render: (_: unknown, record: Room) =>
+        record.is_active ? renderStatusTag(record.is_active) : "Không xác định",
     },
     {
       title: "Hành động",
@@ -181,6 +218,7 @@ const RoomPage: React.FC = () => {
         title={modalMode === "createRoom" ? "Tạo phòng" : "Sửa phòng"}
         nameModel={modalMode}
       />
+      <DetailRoom dataDetail={dataDetail} setOpen={setOpen} open={open} />
     </>
   );
 };
