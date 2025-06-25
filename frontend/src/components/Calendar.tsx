@@ -143,31 +143,32 @@ const handleModalClose = async (result: BookingResult) => {
     const endTime = dayjs(end).format("HH:mm");
 
     try {
-        await bookingService.createBooking({
+        const success = await bookingService.createBooking({
             roomId, 
             date,
             startTime,
             title,
             endTime
         });
-
-        const newEvent: EventInput = {
-            id: `${roomId}-${start}-${end}`,
-            title,
-            start,
-            end,
-            extendedProps: {
-            roomId,
-            roomName,
-            },
-        }; 
-        setEvents([...events, newEvent]);
-        console.log(events);
+        if (success) {
+            const newEvent: EventInput = {
+                id: `${roomId}-${start}-${end}`,
+                title,
+                start,
+                end,
+                extendedProps: {
+                roomId,
+                roomName,
+                },
+            }; 
+            setEvents([...events, newEvent]);  
+            toast.success('Đặt lịch thành công!');
+        } else { 
+            toast.error('Đặt lịch không thành công, vui lòng thử lại sau!');
+        }
         
-        toast.success('Đặt lịch thành công!');
     } catch (error) { 
         console.error('Error creating booking:', error);
-        toast.error('Đặt lịch không thành công, vui lòng thử lại sau!');
     }
 };
     
