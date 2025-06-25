@@ -15,14 +15,6 @@ const DetailRoom: React.FC<DetailRoomProps> = ({
 }) => {
   return (
     <>
-      <Button
-        type="primary"
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        Xem chi tiết
-      </Button>
       <Drawer
         title={dataDetail?.name || "Chi tiết phòng"}
         closable={true}
