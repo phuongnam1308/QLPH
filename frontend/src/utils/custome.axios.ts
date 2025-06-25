@@ -24,8 +24,7 @@ instance.interceptors.response.use(
         return response;
     },
     async (error) => {
-        const originalRequest = error.config;
-
+        const originalRequest = error.config; 
         if (
             error.response &&
             error.response.status === 401 &&

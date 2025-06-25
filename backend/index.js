@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connection = require("./src/config/database");
+const cookieParser = require('cookie-parser'); 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -22,6 +23,7 @@ const userRouter = require("./src/router/routeUser");
 const roleRouter = require("./src/router/routeRole");
 const roomRouter = require("./src/router/routeRoom");
 
+app.use(cookieParser());
 app.use("/api/", routerRoom);
 app.use("/api/booking", routerBooking);
 app.use("/api/auth", authRouter);
