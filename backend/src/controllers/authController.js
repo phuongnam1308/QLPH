@@ -6,11 +6,11 @@ exports.login = async (req, res) => {
       req.body.username,
       req.body.password
     );
-    res.cookie('refreshToken', result.refreshToken, {
+    res.cookie("refreshToken", result.refreshToken, {
       httpOnly: true,
-      secure: false,              
-      sameSite: 'Lax',           
-      maxAge: 7 * 24 * 60 * 60 * 1000 
+      secure: false,
+      sameSite: "Lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     res.json({ success: true, ...result });
   } catch (error) {
@@ -20,7 +20,14 @@ exports.login = async (req, res) => {
 
 exports.refreshToken = async (req, res) => {
   try {
-    const result = await authService.refreshToken(req.body.refreshToken);
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Thiếu refreshToken" });
+    }
+
+    const result = await authService.refreshToken(refreshToken);
     res.json({ success: true, ...result });
   } catch (error) {
     res.status(403).json({ success: false, message: error.message });
